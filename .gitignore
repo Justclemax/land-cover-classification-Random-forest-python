@@ -1,7 +1,1 @@
-*.tif
 .venv
-*.shp
-*.cpg
-*.prj
-*.shx
-*.dbf
