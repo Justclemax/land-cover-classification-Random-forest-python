@@ -1,32 +1,6 @@
-# Land Cover Classification with Python #
+### Land Cover Classification and Segmentation
 
-This script purpose is to do land cover classification solely using Python
+Ce projet vise à classifier et segmenter des images satellitaires pour produire une carte de l’occupation des sols (Land Use/Land Cover, LULC). 
+En utilisant des données Sentinel-2, des échantillons d’entraînement géospatiaux, et un modèle de Random Forest, ce script génère une carte prédictive de couverture terrestre sous forme raster et vectorielle.
 
-I made it to challenge myself that it is possible to do the same approach as in Google Earth Engine using open source solution
-
-I used multiple library for this script such as GeoPandas and pandas to load the vector file/database and plot it, Rasterio to load and handle raster data, Scikit-learn to do machine learning, Matplotlib of course to plot, Numpy obviously for raster/array manipulation, PIL for showing raster data, Scikit-image for image segmentation, and SciPy for statistics analysis
-
-Overall, it is much harder to do than in Google Earth Engine but it is a good approach since we are using open source solution which don't need license
-
-You can use this script, modify it etc.. just don't forget to credit me
-
-Created by Ramadhan
-
-[Email](ramiqcom@gmail.com)
-[LinkedIn](https://linkedin.com/in/ramiqcom)
-[GitHub](https://github.com/ramiqcom)
-[Youtube](https://youtube.com/@ramiqcom)
-
-## Instruction ##
-Before running the script make sure that you:
-1. Have installed Python, at least version 3.9
-2. Know how to code, some machine learning, and remote sensing knowledge (if don't please learn some first! it is for your own good!)
-
-If you have done 1 and 2, now you can:
-1. Clone this repository
-2. Create Python virtual environment
-3. Install the necessary package from the the requirements.txt using ```pip```
-4. Open the ```classification.ipynb``` file
-5. Run the script!
-
-This script is just one method and specific parameter, it can always be adjusted based on your need. The important thing is that you know how to code, some machine learning, and remote sensing knowledge :D. I believe you can!
+![Carte LULC](https://files.fm/u/7r7z66u9pv)
