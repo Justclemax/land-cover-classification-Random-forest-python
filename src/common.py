@@ -3,14 +3,17 @@ import matplotlib.patches as mpatches
 from PIL import ImageColor
 from loguru import logger
 import json
+import os
 import  numpy as np
 import argparse
 import pandas as pd
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 import  rasterio as rio
+from dotenv import  load_dotenv
 from skimage.exposure import rescale_intensity
 
+load_dotenv()
 
 def load_color_data(path: str) -> pd.DataFrame:
     """
@@ -164,8 +167,8 @@ def main():
     parser = argparse.ArgumentParser(description="Process and visualize land cover data.")
     parser.add_argument("--color_data", required=True, help="Path to the land cover color JSON file.")
     parser.add_argument("--sample_data", required=True, help="Path to the GeoJSON or Shapefile sample data.")
-   # parser.add_argument()
-    #parser.add_argument("---")
+    parser.add_argument("data_path_raster_image", help= "Path to raster image", default=os.getenv("PATH_DATA_IMAGE"))
+
 
     # Parse les arguments
     args = parser.parse_args()
