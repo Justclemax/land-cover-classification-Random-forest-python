@@ -1,0 +1,17 @@
+{
+  "palette": [
+    "e34a33",
+    "ffc107",
+    "1e88e5",
+    "004d40"
+  ],
+  "values": [
+    1000, 2000 ,3000, 4000
+  ],
+  "label": [
+    "Urban",
+    "Bare",
+    "Water" ,
+    "Vegetation"
+  ]
+}
