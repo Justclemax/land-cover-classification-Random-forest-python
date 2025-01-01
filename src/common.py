@@ -3,17 +3,17 @@ import matplotlib.patches as mpatches
 from PIL import ImageColor
 from loguru import logger
 import json
-import os
+
 import  numpy as np
-import argparse
+
 import pandas as pd
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 import  rasterio as rio
-from dotenv import  load_dotenv
+
 from skimage.exposure import rescale_intensity
 
-load_dotenv()
+
 
 def load_color_data(path: str) -> pd.DataFrame:
     """
@@ -97,7 +97,9 @@ def process_and_plot_sample(sample_path: str, transform_result: dict) -> object:
         plt.title("Visualisation des données d'échantillon")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
-        plt.show()
+
+        plt.pause(10)
+        plt.close()
 
         # Extraction des coordonnées
         sample_extract = sample.copy()
@@ -116,45 +118,48 @@ def process_and_plot_sample(sample_path: str, transform_result: dict) -> object:
         logger.error(f"Unexpected error during data processing : {e}")
         raise
 
-def load_image_getting_optic_tensor(path_img: str, out_range :tuple =(0,1)):
+def load_image_getting_optic_tensor(path_img: str, out_range =(0,3)):
     try:
-        with open(path_img) as file :
-            optic_img = rio.open(file).read()
-        red = rescale_intensity(optic_img[4],in_range =(0.1, 0.4), out_range= out_range)
-        blue = rescale_intensity(optic_img[5],in_range=(0.05, 0.3), out_range= out_range)
-        green = rescale_intensity(optic_img[6],in_range=(0.025, 0.25), out_range= out_range)
+
+        optic_img = rio.open(path_img).read() / 1e4
+        red = rescale_intensity(optic_img[3],in_range =(0.1, 0.8), out_range= out_range)
+        blue = rescale_intensity(optic_img[2],in_range=(0.01, 0.8), out_range= out_range)
+        green = rescale_intensity(optic_img[1],in_range=(0.01, 0.7), out_range= out_range)
         arr_image = np.stack(
             [red, green, blue]
         ).T
 
         composite = np.rot90(np.flip(arr_image, axis=1), k=1)
-        plt.show(composite)
+        plt.title('Raster image')
+        plt.imshow(composite)
 
-
-        return  optic_img * 1e4
+        #plt.show()
+        plt.pause(10)
+        plt.close()
+        return  optic_img
 
     except Exception as e :
         logger.critical(f" {e}")
-    return None
+        raise
 
-def extraction_data_in_optic_image(path) -> pd.DataFrame:
+def extraction_data_in_optic_image(sample_path, path_img, transform_result: dict) -> pd.DataFrame:
     """
     Extract raster values from the optical image and return a DataFrame with the data.
     """
     try:
-        sample_extract, coords = process_and_plot_sample(sample_path=path, transform_result={})
-
+        sample_extract, coords = process_and_plot_sample(sample_path=sample_path, transform_result=transform_result)
         # Extract the corresponding raster values for the coordinates
-        optic_img = load_image_getting_optic_tensor(path)
+        optic_img = load_image_getting_optic_tensor(path_img)
 
         if optic_img is None:
             raise ValueError("Error loading optical image data.")
         #image_extract = np.stack(
            # [x for x in optic_img.sample(coords)]
        # ) / 1e4
-        image_extract = np.stack([optic_img[:, float(coord[1]), float(coord[0])] for coord in coords]) / 1e4
+        image_extract = np.stack([optic_img[:, int(coord[1]), int(coord[0])] for coord in coords]) / 1e4
 
         sample_extract[["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B8A", "B9" ,"B11", "B12"]] = image_extract
+
         return sample_extract
 
     except Exception as e:
@@ -162,29 +167,3 @@ def extraction_data_in_optic_image(path) -> pd.DataFrame:
         raise
 
 
-def main():
-    # Initialisation
-    parser = argparse.ArgumentParser(description="Process and visualize land cover data.")
-    parser.add_argument("--color_data", required=True, help="Path to the land cover color JSON file.")
-    parser.add_argument("--sample_data", required=True, help="Path to the GeoJSON or Shapefile sample data.")
-    parser.add_argument("data_path_raster_image", help= "Path to raster image", default=os.getenv("PATH_DATA_IMAGE"))
-
-
-    # Parse les arguments
-    args = parser.parse_args()
-
-    try:
-        # Load and transform color data
-        logger.info("Loading and transforming colour data...")
-        transform_result = transform_color(args.color_data)
-
-        # Load, transform and plot sample data
-        logger.info("Processing and displaying sample data...")
-        process_and_plot_sample(args.sample_data, transform_result)
-
-    except Exception as e:
-        logger.critical(f"Critical error in the main script : {e}")
-
-
-if __name__ == "__main__":
-    main()
