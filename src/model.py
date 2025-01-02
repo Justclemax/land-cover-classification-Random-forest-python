@@ -124,6 +124,7 @@ def main():
         logger.info("Extracting data from optical image and sample...")
         data = extraction_data_in_optic_image(args.sample_data, args.data_path_raster_image, transform_result)
 
+
         # Build and evaluate the model
         logger.info("Building and evaluating the model...")
         build_model(data=data, report_save_path=args.report_save_path)

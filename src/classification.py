@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+
 # ## Data Preparation 
 # 
 # This is where you supposed to put your file location so that it can be loaded to the script

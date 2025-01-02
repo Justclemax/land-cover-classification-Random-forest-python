@@ -156,6 +156,7 @@ def extraction_data_in_optic_image(sample_path, path_img, transform_result: dict
         #image_extract = np.stack(
            # [x for x in optic_img.sample(coords)]
        # ) / 1e4
+
         image_extract = np.stack([optic_img[:, int(coord[1]), int(coord[0])] for coord in coords]) / 1e4
 
         sample_extract[["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B8A", "B9" ,"B11", "B12"]] = image_extract
